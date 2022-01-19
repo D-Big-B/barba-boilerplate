@@ -1,6 +1,7 @@
 import { createCamera } from "./components/camera.js";
-import { createCube } from "./components/cube.js";
+import { createPlane } from "./components/plane.js";
 import { createScene } from "./components/scene.js";
+import { createDebugger } from "./components/debugger";
 
 import { createRenderer } from "./systems/renderer.js";
 import { Resizer } from "./systems/Resizer.js";
@@ -12,20 +13,27 @@ let renderer;
 let scene;
 let loop;
 
+const debugObject = {
+  progress: 0,
+};
 class World {
   constructor(container) {
+    const debugGui = createDebugger();
     camera = createCamera();
     renderer = createRenderer();
     scene = createScene();
+
     loop = new Loop(camera, scene, renderer);
     const controls = createControls(camera, renderer.domElement);
     container.append(renderer.domElement);
 
-    const cube = createCube();
+    const plane = createPlane();
 
-    loop.updatables.push(cube);
+    plane.debug(debugGui);
 
-    scene.add(cube);
+    loop.updatables.push(plane);
+
+    scene.add(plane);
 
     const resizer = new Resizer(container, camera, renderer);
   }
@@ -42,6 +50,8 @@ class World {
   stop() {
     loop.stop();
   }
+
+  debug() {}
 }
 
 export { World };
